@@ -11,6 +11,18 @@
     <title>Title</title>
 </head>
 <body>
-
+<font color="black" Article:/>
+<br><br>
+Id: ${article.id}
+<br><br>
+Title: ${article.title}
+<br><br>
+Date of Creation ${article.dateOfCreation}
+<br><br>
+AuthorId: ${article.authorId}
+<br><br>
+Text: ${article.text}
+<br><br>
+Download: ${article.download}
 </body>
 </html>

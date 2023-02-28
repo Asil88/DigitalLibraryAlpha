@@ -1,2 +1,5 @@
-package com.digital_library.repository;public class ArticleRepository {
+package com.digital_library.repository;
+
+public class ArticleRepository {
+
 }

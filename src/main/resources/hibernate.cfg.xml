@@ -5,7 +5,7 @@
 <hibernate-configuration>
     <session-factory>
 
-        <property name="connection.url">jdbc:postgresql://localhost/db_name</property>
+        <property name="connection.url">jdbc:postgresql://localhost:5432/digit_library_db</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
         <property name="connection.username">postgres</property>
         <property name="connection.password">root</property>
@@ -16,7 +16,7 @@
         <property name="show_sql">true</property>
         <property name="format_sql">true</property>
 
-        <mapping class="com.tms.domain.Consultation"/>
+        <mapping class="com.digital_library.domain.User"/>
 
     </session-factory>
 </hibernate-configuration>
