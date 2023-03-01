@@ -2,6 +2,7 @@ package com.digital_library.domain;
 
 
 
+import com.digital_library.util.PaymentMethod;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,4 +24,5 @@ public class Author {
     private String biography;
     @Column(name = "description")
     private String description;
+
 }

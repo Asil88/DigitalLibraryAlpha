@@ -26,7 +26,4 @@ public class User {
     private String email;
     @Column(name = "phone_number")
     private String phone_number;
-    @Enumerated(EnumType.STRING)
-    @Type(type = "com.digital_library.util.EnumTypePostgreSql")
-    private PaymentMethod paymentMethod;
 }
