@@ -1,10 +1,9 @@
 package com.digital_library.controller;
 
-
-import com.digital_library.domain.Author;
-import com.digital_library.domain.User;
-import com.digital_library.service.AuthorService;
-import com.digital_library.service.UserService;
+import com.digital_library.domain.Book;
+import com.digital_library.domain.Order;
+import com.digital_library.service.BookService;
+import com.digital_library.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,55 +18,54 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+@RequestMapping(value = "/book", produces = MediaType.APPLICATION_JSON_VALUE)
+public class BookController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    UserService userService;
+    BookService bookService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public ResponseEntity<ArrayList<Book>> getAllBooks() {
+        return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+    public ResponseEntity<Book> getBookById(@PathVariable int id) {
+        Book book = bookService.getBookById(id);
+        return new ResponseEntity<>(book, book.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> createBook(@RequestBody @Valid Book book, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 logger.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        userService.createUser(user);
+        bookService.createBook(book);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<HttpStatus> updateUserById(@RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> updateBookById(@RequestBody Book book, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 logger.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        userService.updateUserById(user);
+        bookService.updateBookById(book);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@RequestBody @Valid User user) {
-        userService.deleteUser(user);
+    public ResponseEntity<HttpStatus> delete(@RequestBody @Valid Book book) {
+        bookService.deleteBook(book);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-

@@ -1,67 +1,67 @@
 package com.digital_library.repository;
 
-import com.digital_library.domain.Author;
+
+import com.digital_library.domain.Order;
+import com.digital_library.domain.User;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 
 import java.util.ArrayList;
 
 @Repository
-public class AuthorRepository {
+public class OrderRepository {
     SessionFactory sessionFactory;
 
-    public AuthorRepository() {
+    public OrderRepository() {
         this.sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    public ArrayList <Author> getAllAuthors() {
+    public ArrayList<Order> getAllOrders() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Query query = session.createQuery("from Author");
-        ArrayList<Author> list = (ArrayList<Author>) query.getResultList();
+        Query query = session.createQuery("from Order");
+        ArrayList<Order> list = (ArrayList<Order>) query.getResultList();
 
         session.getTransaction().commit();
         session.close();
         return list;
     }
 
-    public Author getAuthorById(int id) {
+    public Order getOrderById(int id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Author author = session.get(Author.class, id);
+        Order order = session.get(Order.class, id);
 
         session.getTransaction().commit();
         session.close();
-        return author;
+        return order;
     }
 
-    public void createAuthor(Author author) {
+    public void createOrder(Order order) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save(author);
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    public void updateAuthor(Author author){
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.saveOrUpdate(author);
+        session.save(order);
         session.getTransaction().commit();
         session.close();
     }
 
-    public void deleteAuthor(Author author){
+    public void updateOrder(Order order){
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.delete(author);
+        session.saveOrUpdate(order);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void deleteOrder(Order order){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.delete(order);
         session.getTransaction().commit();
         session.close();
     }

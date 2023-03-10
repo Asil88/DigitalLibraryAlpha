@@ -1,67 +1,66 @@
 package com.digital_library.repository;
 
-import com.digital_library.domain.Author;
+import com.digital_library.domain.Book;
+import com.digital_library.domain.Order;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 
 import java.util.ArrayList;
 
 @Repository
-public class AuthorRepository {
+public class BookRepository {
     SessionFactory sessionFactory;
 
-    public AuthorRepository() {
+    public BookRepository() {
         this.sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-    public ArrayList <Author> getAllAuthors() {
+    public ArrayList<Book> getAllBooks() {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Query query = session.createQuery("from Author");
-        ArrayList<Author> list = (ArrayList<Author>) query.getResultList();
+        Query query = session.createQuery("from Book");
+        ArrayList<Book> list = (ArrayList<Book>) query.getResultList();
 
         session.getTransaction().commit();
         session.close();
         return list;
     }
 
-    public Author getAuthorById(int id) {
+    public Book getBookById(int id) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        Author author = session.get(Author.class, id);
+        Book book = session.get(Book.class, id);
 
         session.getTransaction().commit();
         session.close();
-        return author;
+        return book;
     }
 
-    public void createAuthor(Author author) {
+    public void createBook(Book book) {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.save(author);
-        session.getTransaction().commit();
-        session.close();
-    }
-
-    public void updateAuthor(Author author){
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-        session.saveOrUpdate(author);
+        session.save(book);
         session.getTransaction().commit();
         session.close();
     }
 
-    public void deleteAuthor(Author author){
+    public void updateBook(Book book){
         Session session = sessionFactory.openSession();
         session.beginTransaction();
-        session.delete(author);
+        session.saveOrUpdate(book);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void deleteBook(Book book){
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+        session.delete(book);
         session.getTransaction().commit();
         session.close();
     }

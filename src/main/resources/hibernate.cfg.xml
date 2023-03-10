@@ -17,6 +17,10 @@
         <property name="format_sql">true</property>
 
         <mapping class="com.digital_library.domain.User"/>
+        <mapping class="com.digital_library.domain.Author"/>
+        <mapping class="com.digital_library.domain.Order"/>
+        <mapping class="com.digital_library.domain.Book"/>
+
 
     </session-factory>
 </hibernate-configuration>

@@ -1,9 +1,8 @@
 package com.digital_library.controller;
 
-
-import com.digital_library.domain.Author;
+import com.digital_library.domain.Order;
 import com.digital_library.domain.User;
-import com.digital_library.service.AuthorService;
+import com.digital_library.service.OrderService;
 import com.digital_library.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,55 +18,54 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 
 @RestController
-@RequestMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
-public class UserController {
+@RequestMapping(value = "/order", produces = MediaType.APPLICATION_JSON_VALUE)
+public class OrderController {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    UserService userService;
+    OrderService orderService;
 
     @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    public OrderController(OrderService orderService) {
+        this.orderService = orderService;
     }
 
     @GetMapping
-    public ResponseEntity<ArrayList<User>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+    public ResponseEntity<ArrayList<Order>> getAllOrders() {
+        return new ResponseEntity<>(orderService.getAllOrders(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
-        User user = userService.getUserById(id);
-        return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
+    public ResponseEntity<Order> getOrderById(@PathVariable int id) {
+        Order order = orderService.getOrderById(id);
+        return new ResponseEntity<>(order, order.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
     @PostMapping
-    public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> createOrder(@RequestBody @Valid Order order, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 logger.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        userService.createUser(user);
+        orderService.createOrder(order);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<HttpStatus> updateUserById(@RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> updateOrderById(@RequestBody Order order, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (ObjectError o : bindingResult.getAllErrors()) {
                 logger.warn(o.getDefaultMessage());
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        userService.updateUserById(user);
+        orderService.updateOrderById(order);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> delete(@RequestBody @Valid User user) {
-        userService.deleteUser(user);
+    public ResponseEntity<HttpStatus> delete(@RequestBody @Valid Order order) {
+        orderService.deleteOrder(order);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
-
