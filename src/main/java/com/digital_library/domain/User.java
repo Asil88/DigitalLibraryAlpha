@@ -2,6 +2,7 @@ package com.digital_library.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
@@ -18,6 +19,7 @@ public class User {
     private int id;
     @Column(name = "login")
     private String login;
+    @JsonIgnore
     @Column(name = "password")
     private String password;
     @Column(name = "name")
@@ -27,7 +29,7 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
     //У ОДНОГО ЮЗЕРА МОЖЕТ БЫТЬ ОДНА ЛИЧНАЯ КОРЗИНА
-    @JsonManagedReference
+    /*@JsonManagedReference
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private Order order;
+    private Order order;*/
 }

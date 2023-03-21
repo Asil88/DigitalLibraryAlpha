@@ -16,8 +16,7 @@ import java.util.Objects;
 @Table(name = "articles")
 public class Article {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "article_seq")
-    @SequenceGenerator(name = "article_seq", sequenceName = "article_article_id_seq")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Size(min = 5, max = 16)

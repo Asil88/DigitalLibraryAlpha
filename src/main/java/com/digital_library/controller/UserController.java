@@ -29,6 +29,7 @@ public class UserController {
         this.userService = userService;
     }
 
+
     @GetMapping
     public ResponseEntity<ArrayList<User>> getAllUsers() {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
@@ -40,6 +41,11 @@ public class UserController {
         return new ResponseEntity<>(user, user.getId() != 0 ? HttpStatus.OK : HttpStatus.CONFLICT);
     }
 
+    @GetMapping("/start/{letter}")
+    public ResponseEntity<User> getUserByFirstStartingWith(@PathVariable String letter) {
+        return new ResponseEntity<>(userService.getUserByFirstStartingWith(letter), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<HttpStatus> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -49,7 +55,7 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         userService.createUser(user);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PutMapping
@@ -68,6 +74,12 @@ public class UserController {
     public ResponseEntity<HttpStatus> delete(@RequestBody @Valid User user) {
         userService.deleteUser(user);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/test")
+    public ResponseEntity<HttpStatus> saveUserTransactional(@RequestBody User user) {
+        userService.saveUserTransactional(user);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
 

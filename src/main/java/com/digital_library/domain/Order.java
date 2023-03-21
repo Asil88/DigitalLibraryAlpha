@@ -21,10 +21,10 @@ public class Order {
     @Column (name = "order_id")
     private int id;
     //У одной Корзины может быть один Юзер
-    @JsonBackReference
+    /*@JsonBackReference
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user;*/
 
     @Column (name = "count")
     private int count;

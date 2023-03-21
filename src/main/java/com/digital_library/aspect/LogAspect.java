@@ -1,68 +1,56 @@
-
 package com.digital_library.aspect;
 
-import com.digital_library.domain.Article;
-import com.digital_library.service.ArticleService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.*;
-import org.aspectj.lang.reflect.MethodSignature;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalTime;
+import java.util.Arrays;
 
 @Aspect
 @Component
 public class LogAspect {
-
-
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Before("execution(* com.digital_library.service.ArticleService.getArticleById())")
-    public void logBeforeAdvice(JoinPoint joinPoint) {
-        log.info("LOG:DOBAVLEN ARTICL,KRUTO!");
-        System.out.println(joinPoint.getSignature());
-        Article article = (Article) joinPoint.getTarget();
-        System.out.println("ARTICLE: " + article.getTitle() + " BIL SOZDAN " + article.getDateOfCreation() + " BYDYSHAYA SILKA NA SKA4IVANIE " + article.getDownload());
-        //return article;
+    @Pointcut("within(@org.springframework.stereotype.Repository *)" +
+            " || within(@org.springframework.stereotype.Service *)" +
+            " || within(@org.springframework.web.bind.annotation.RestController *)")
+    public void springBeanPointcut() {}
+
+    @Pointcut("within(com.digital_library..*)" +
+            " || within(com.digital_library.service..*)" +
+            " || within(com.digital_library.controller..*)")
+    public void applicationPackagePointcut() {}
+
+    @AfterThrowing(pointcut = "applicationPackagePointcut() && springBeanPointcut()", throwing = "e")
+    public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
+        log.error("Exception in {}.{}() with cause = {}", joinPoint.getSignature().getDeclaringTypeName(),
+                joinPoint.getSignature().getName(), e.getCause() != null ? e.getCause() : "NULL");
     }
 
-    /*@After("execution(public * t*(..))")
-    public void logAfterAdvice(JoinPoint joinPoint) {
-        log.info("THIS LOG AFTER MESSAGE");
-        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-        System.out.println("Сигнатура метода" + methodSignature);
-    }*/
-
-
-    @Around("@annotation(com.digital_library.annotations.CheckTimeAnnotation)")
-    public Object logAfterAround(ProceedingJoinPoint joinPoint) throws Throwable {
-        LocalTime start = LocalTime.now();
-        System.out.println("Timer start...");
-        Object proceed = joinPoint.proceed();
-        LocalTime end = LocalTime.now();
-        System.out.println("Timer end...");
-        log.info(String.valueOf(end.getNano() - start.getNano()));
-        return proceed;
-
-      /*  long start = System.currentTimeMillis();
-        Object proceed = joinPoint.proceed();
-        long executionTime = System.currentTimeMillis() - start;
-        System.out.println(joinPoint.getSignature() + " executed in " + executionTime + "ms");
-        return proceed;*/
+    @Around("applicationPackagePointcut() && springBeanPointcut()")
+    public Object logAround(ProceedingJoinPoint joinPoint) throws Throwable {
+        if (log.isDebugEnabled()) {
+            log.debug("Enter: {}.{}() with argument[s] = {}", joinPoint.getSignature().getDeclaringTypeName(),
+                    joinPoint.getSignature().getName(), Arrays.toString(joinPoint.getArgs()));
+        }
+        try {
+            Object result = joinPoint.proceed();
+            if (log.isDebugEnabled()) {
+                log.debug("Exit: {}.{}() with result = {}", joinPoint.getSignature().getDeclaringTypeName(),
+                        joinPoint.getSignature().getName(), result);
+            }
+            return result;
+        } catch (IllegalArgumentException e) {
+            log.error("Illegal argument: {} in {}.{}()", Arrays.toString(joinPoint.getArgs()),
+                    joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName());
+            throw e;
+        }
     }
-
-  /*  @AfterReturning("within(com.digital_library.service.ArticleService)")
-    public void logAfterReturning(JoinPoint joinPoint) {
-        log.info("THIS LOG AFTER  returning MESSAGE");
-        System.out.println(joinPoint.getSignature());
-    }
-
-    @AfterThrowing(value = "within(com.digital_library.service.ArticleService)", throwing = "e")
-    public void logAfterThrowing(RuntimeException e) {
-        log.info("THIS LOG AFTER Throwing MESSAGE");
-    }*/
 }
 
